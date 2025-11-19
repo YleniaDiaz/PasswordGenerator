@@ -22,16 +22,31 @@ def get_configuration():
     return characters
 
 def get_character_counts():
-    total = int(input("How many characters do you want in total?: "))
-    letters = int(input("How many alphabetic characters?: "))
-    numbers = int(input("How many numeric characters?: "))
-    symbols = int(input("How many symbols?: "))
-    
-    if letters + numbers + symbols != total:
-        print("The sum of the types does not match the total. It will be adjusted automatically.")
-        letters = total // 3
-        numbers = total // 3
-        symbols = total - letters - numbers
+    use_default_config = input("Do you want to use the default configuration for the characters? (y/n): ").lower() == 'y'
+    if use_default_config:
+        print("===============DEFAULT CONFIGURATION===============")
+        print("TOTAL = 25  LETTERS = 10  NUMBERS = 10  SYMBOLS = 5")
+        print("===================================================")
+        total = 25
+        letters = 10
+        numbers = 10
+        symbols = 5
+    else:
+        total = int(input("How many characters do you want in total?: "))
+        letters = int(input("How many alphabetic characters?: "))
+        numbers = int(input("How many numeric characters?: "))
+        symbols = int(input("How many symbols?: "))
+
+        if letters + numbers + symbols != total:
+            print("=============COUNTING ERROR=============")
+            print("SUM NOT MATCHING TOTAL. ADJUSTING VALUES")
+            print("========================================")
+            letters = total // 3
+            numbers = total // 3
+            symbols = total - letters - numbers
+        print("===============CURRENT CONFIGURATION===============")
+        print(f"TOTAL = {total}  LETTERS = {letters}  NUMBERS = {numbers}  SYMBOLS = {symbols}")
+        print("===================================================")
     return letters, numbers, symbols
 
 def generate_segment(characters, count):
@@ -40,15 +55,15 @@ def generate_segment(characters, count):
 def generate_password():
     config = get_configuration()
     letters, numbers, symbols = get_character_counts()
-    
+
     letter_segment = generate_segment(config['letters'], letters)
     number_segment = generate_segment(config['numbers'], numbers)
     symbol_segment = generate_segment(config['symbols'], symbols)
-    
+
     password = letter_segment + number_segment + symbol_segment
     random.shuffle(password)
     return ''.join(password)
 
 # Execution
-print("Your generated password is:", generate_password())
-
+password = generate_password()
+print(f"========GENERATED PASSWORD========\n {password.center(32)}")
